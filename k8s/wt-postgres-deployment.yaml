@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wt-postgres-deployment
+  namespace: wt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wt-postgres
+  template:
+    metadata:
+      labels:
+        app: wt-postgres
+    spec:
+      containers:
+      - name: wt-postgres-container
+        image: postgres:17
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5432
+        env:
+          - name: POSTGRES_DB
+            value: wt
+          - name: POSTGRES_USER
+            value: postgres
+          - name: POSTGRES_PASSWORD
+            value: foo123
+          - name: POSTGRES_SCHEMA
+            value: public
+          - name: TZ
+            value: "Europe/Vilnius"
+        volumeMounts:
+          - name: wt-postgres-data-volume
+            mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: wt-postgres-data-volume
+          persistentVolumeClaim:
+            claimName: wt-postgres-pvc

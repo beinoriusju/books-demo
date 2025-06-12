@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Book Details{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>{{ book.title }}</h1>
+
+    <p>Author: {{ book.author }}</p>
+    <p>Genre: {{ book.genre }}</p>
+    <p>ISBN: {{ book.isbn }}</p>
+    <p>Publication date: {{ book.publicationDate|date('Y-m-d')}}</p>
+    <p>Number of copies: {{ book.numberOfCopies }}</p>
+
+    <div>
+        <a href="{{ path('book_edit', { 'id': book.id }) }}" class="btn btn-primary mb-3">Edit</a>
+     <a href="{{ path('book_delete', { 'id': book.id }) }}" class="btn  btn-danger mb-3">Delete</a>
+        <a href="{{ path('book_index') }}" class="btn btn-secondary mb-3">Back to list</a>
+    </div>
+</div>
+{% endblock %}

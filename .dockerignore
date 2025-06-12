@@ -1,0 +1,93 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml
+compose*.yaml
+
+# IDE and Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Symfony Development
+var/cache/dev/
+var/cache/test/
+var/log/
+var/sessions/
+.env.local
+.env.local.php
+.env.*.local
+.php_cs.cache
+.phpunit.result.cache
+
+# Webpack Encore (development assets)
+public/build/
+assets/vendor/
+
+# Package manager lock files (optional - keep if you want reproducible builds)
+# pnpm-lock.yaml
+# composer.lock
+
+# Testing
+tests/
+phpunit.dist.xml
+.phpunit.result.cache
+
+# Documentation
+README.md
+CHANGELOG.md
+CONTRIBUTING.md
+LICENSE
+docs/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+
+# Development tools
+.editorconfig
+.php_cs
+.php_cs.dist
+.php-cs-fixer.php
+.php-cs-fixer.dist.php
+phpstan.neon
+phpstan.neon.dist
+psalm.xml
+psalm.xml.dist
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Development dependencies (if using --no-dev in production)
+# vendor/ (uncomment if you install dependencies in the Dockerfile)
+
+# Application specific
+translations/

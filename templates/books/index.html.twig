@@ -1,0 +1,134 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+    <h1>Books</h1>
+
+    <p>Welcome to the book management system. Here you can view, add, edit, and delete books.</p>
+
+    {# Display flash messages #}
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type }} alert-dismissible" role="alert">
+                {{ message }}
+                <button type="button" class="alert-close" onclick="this.parentElement.style.display='none';">&times;</button>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <div class="list-toolbox">
+        <a href="{{ path('book_new') }}" class="btn btn-primary mb-3">Add New Book</a>
+
+        <div class="list-search {% if filter.query is not empty %}has-value{% endif %}">
+            <input type="text" id="search-input" name="query" value="{{ filter.query }}" placeholder="Search by title or author" class="list-search-input" />
+            <button id="reset-search" class="list-search-reset">x</button>
+        </div>
+    </div>
+
+    <div id="books-list-container">
+        {% include 'books/_list.html.twig' %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+jQuery(document).ready(function($) {
+    let searchTimeout;
+    let currentQuery = '';
+    let initFilter = JSON.parse('{{ filter|json_encode|raw }}');
+
+    let searchInput = $('#search-input');
+    searchInput.focus();
+    if (searchInput.val()) {
+        searchInput[0].setSelectionRange(searchInput.val().length, searchInput.val().length);
+    }
+
+    // Auto-hide flash messages after 5 seconds
+    setTimeout(function() {
+        $('.alert-dismissible').fadeOut(500, function() {
+            $(this).remove();
+        });
+    }, 5000);
+
+    $('#reset-search').on('click', function() {
+        $('#search-input').val('').trigger('input').focus();
+    });
+
+    // Debounced search functionality
+    $('#search-input').on('input', function() {
+        currentQuery = $(this).val();
+
+        if (currentQuery) {
+            $(this).parent().addClass('has-value');
+        } else {
+            $(this).parent().removeClass('has-value');
+        }
+        
+        clearTimeout(searchTimeout);
+        
+        // Set new timeout for debouncing (500ms delay)
+        searchTimeout = setTimeout(function() {
+            const filter = {
+                ...initFilter,
+                query: currentQuery,
+                page: 1
+            }
+
+            const params = new URLSearchParams(filter);
+            const queryString = params.toString();
+
+            window.history.pushState(filter, '', '{{ path('book_index') }}?' + queryString);
+
+            performSearch({
+                ...initFilter,
+                query: currentQuery,
+                page: 1
+            });
+        }, 500);
+    });
+
+    // Function to perform search
+    function performSearch(filter) {
+        $.ajax({
+            url: '{{ path('book_index') }}',
+            type: 'GET',
+            data: filter,
+            dataType: 'html',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success: function(data) {
+                $('#books-list-container').html(data);
+                // Update hidden page input
+                $('#search-page').val(page);
+            },
+            error: function() {
+                alert('Error searching books.');
+            }
+        });
+    }
+
+    // Delegate click handler for pagination links inside #books-list-container
+    $('#books-list-container').on('click', '.pagination a', function(event) {
+        event.preventDefault();
+
+        const url = $(this).attr('href');
+        
+        const urlParams = new URLSearchParams(url.split('?')[1]);
+
+        const filter = Object.fromEntries(urlParams.entries());
+
+        window.history.pushState(filter, '', url);
+
+        performSearch(filter); 
+    });
+
+    // Handle browser back/forward buttons for AJAX navigation (optional)
+    window.onpopstate = function() {
+        location.reload();
+    };
+});
+</script>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% import '_pagination.html.twig' as pagination %}
+
+    {% if books is empty %}
+        <div class="no-books">
+            <p>No books found.</p>
+        </div>
+    {% else %}
+        <div class="books-table-container">
+            <table class="books-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>ISBN</th>
+                        <th>Publication Date</th>
+                        <th>Genre</th>
+                        <th>Copies</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in books %}
+                        <tr>
+                            <td class="book-id">#{{ book.id }}</td>
+                            <td class="book-title">
+                                <a href="{{ path('book_show', { 'id': book.id }) }}" class="book-title-link">
+                                    {{ book.title }}
+                                </a>
+                            </td>
+                            <td class="book-author">{{ book.author ?: 'Unknown' }}</td>
+                            <td class="book-isbn">{{ book.isbn ?: '-' }}</td>
+                            <td class="book-publication-date">
+                                {% if book.publicationDate %}
+                                    {{ book.publicationDate|date('Y-m-d') }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="book-genre">
+                                {% if book.genre %}
+                                    <span class="genre-badge">{{ book.genre }}</span>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="book-copies">{{ book.numberOfCopies }}</td>
+                            <td class="book-actions">
+                                <a href="{{ path('book_show', { 'id': book.id }) }}" class="btn btn-sm btn-primary">View</a>
+                                <a href="{{ path('book_edit', { 'id': book.id }) }}" class="btn btn-sm btn-secondary">Edit</a>
+                                <a href="{{ path('book_delete', { 'id': book.id }) }}" class="btn btn-sm btn-danger" >Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+    {{ pagination.pagination(currentPage, totalPages, 'book_index', filter) }}

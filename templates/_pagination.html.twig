@@ -1,0 +1,39 @@
+{# _pagination.html.twig #}
+{% macro pagination(currentPage, totalPages, path, queryParams = {}) %}
+    {% import _self as macros %}
+
+    {% if totalPages > 1 %}
+        <nav class="pagination" role="navigation" aria-label="Pagination Navigation">
+            <ul class="pagination-list">
+                {# Previous button #}
+                <li class="pagination-previous {% if currentPage <= 1 %}disabled{% endif %}">
+                    {% if currentPage > 1 %}
+                        <a href="{{ path(path, queryParams|merge({'page': currentPage - 1})) }}" aria-label="Previous page">&laquo; Prev</a>
+                    {% else %}
+                        <span>&laquo; Prev</span>
+                    {% endif %}
+                </li>
+
+                {# Page numbers #}
+                {% for page in 1..totalPages %}
+                    <li class="pagination-page {% if page == currentPage %}active{% endif %}">
+                        {% if page == currentPage %}
+                            <span>{{ page }}</span>
+                        {% else %}
+                            <a href="{{ path(path, queryParams|merge({'page': page})) }}">{{ page }}</a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+
+                {# Next button #}
+                <li class="pagination-next {% if currentPage >= totalPages %}disabled{% endif %}">
+                    {% if currentPage < totalPages %}
+                        <a href="{{ path(path, queryParams|merge({'page': currentPage + 1})) }}" aria-label="Next page">Next &raquo;</a>
+                    {% else %}
+                        <span>Next &raquo;</span>
+                    {% endif %}
+                </li>
+            </ul>
+        </nav>
+    {% endif %}
+{% endmacro %}

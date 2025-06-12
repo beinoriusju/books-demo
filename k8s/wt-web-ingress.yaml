@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wt-web-ingress
+  namespace: wt
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/proxy-body-size: 25m
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - beooks.beinorius.lt
+    secretName: lets-encrypt-wt-books-web-key
+  rules:
+    - host: beooks.beinorius.lt
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: wt-web-service
+                port:
+                  number: 3000
