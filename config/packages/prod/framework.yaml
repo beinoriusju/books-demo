@@ -1,0 +1,13 @@
+# Production-specific framework configuration
+framework:
+    # Trust proxies for production environment
+    trusted_proxies: '%env(SYMFONY_TRUSTED_PROXIES)%'
+    trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-prefix']
+    
+    # Session configuration for production
+    session:
+        cookie_secure: true
+        cookie_httponly: true
+        cookie_samesite: 'lax'
+        # Use Redis or database for session storage in production if you have multiple replicas
+        # handler_id: 'app.session.handler'

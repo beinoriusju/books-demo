@@ -30,6 +30,7 @@ COPY . .
 # Set production environment variables
 ENV APP_ENV=prod
 ENV APP_DEBUG=0
+ENV SYMFONY_TRUSTED_PROXIES=127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
 
 # Install PHP dependencies with proper environment
 RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interaction

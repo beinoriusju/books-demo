@@ -4,16 +4,66 @@
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
+        <style>
+            body {
+                background-image: 
+                    linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+                    url('/images/bible-2110439_640.jpg');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                min-height: 100vh;
+            }
+            
+            /* Add a subtle overlay for better text readability */
+            .content-overlay {
+                background-color: rgba(255, 255, 255, 0.8);
+                min-height: calc(100vh - 76px); /* Account for navbar height */
+                padding: 20px 0;
+            }
+            
+            /* Ensure navbar stays opaque */
+            .navbar {
+                background-color: rgba(52, 58, 64, 0.95) !important;
+                backdrop-filter: blur(10px);
+            }
+        </style>
 
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% if app.user %}
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div class="container">
+                    <a class="navbar-brand" href="{{ path('book_index') }}">📚 WiseTeam Books</a>
+                    
+                    <div class="navbar-nav ms-auto">
+                        <div class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                👤 {{ app.user.userIdentifier }}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="{{ path('app_logout') }}">🚪 Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        {% endif %}
+        
+        <div class="content-overlay">
+            {% block body %}{% endblock %}
+        </div>
+        
         {% block javascript %}{% endblock %}
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

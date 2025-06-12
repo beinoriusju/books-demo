@@ -6,14 +6,16 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
     nginx.ingress.kubernetes.io/proxy-body-size: 25m
+    nginx.ingress.kubernetes.io/use-forwarded-headers: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - beooks.beinorius.lt
-    secretName: lets-encrypt-wt-books-web-key
+    - books.hackstop.lt
+    secretName: lets-encrypt-wt-books-web-key2
   rules:
-    - host: beooks.beinorius.lt
+    - host: books.hackstop.lt
       http:
         paths:
           - path: /
@@ -22,4 +24,4 @@ spec:
               service:
                 name: wt-web-service
                 port:
-                  number: 3000
+                  number: 80

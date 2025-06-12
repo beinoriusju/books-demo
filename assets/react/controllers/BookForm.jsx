@@ -126,6 +126,7 @@ export default function BookForm(props) {
                 headers: {
                     'Content-Type': method === 'PATCH' ? 'application/merge-patch+json' : 'application/ld+json',
                 },
+                credentials: 'include',
                 body: JSON.stringify(formattedData)
             });
 
@@ -140,7 +141,16 @@ export default function BookForm(props) {
                 }
             }
 
-            const result = await response.json();
+            let result;
+            
+            try {
+                result = await response.json();
+            } catch (e) {
+                throw new Error("Adding book was not successful")
+            }
+
+
+
             setSubmitSuccess(true);
             
             // Redirect to the book detail page
@@ -279,16 +289,14 @@ export default function BookForm(props) {
                         {isSubmitting ? 'Saving...' : (isEditing ? 'Update Book' : 'Create Book')}
                     </button>
                     
-                    {props.onCancel && (
-                        <button 
-                            type="button" 
-                            onClick={props.onCancel}
-                            className="btn btn-secondary"
-                            disabled={isSubmitting}
-                        >
-                            Cancel
-                        </button>
-                    )}
+                    <button 
+                        type="button" 
+                        onClick={() => window.location.href = '/books'}
+                        className="btn btn-secondary"
+                        disabled={isSubmitting}
+                    >
+                        Cancel
+                    </button>
                 </div>
             </form>
         </div>
